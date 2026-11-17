@@ -6,5 +6,9 @@ dist
 .cache
 package-lock.json
 
+# Cloudflare Wrangler (estado local / segredos do Worker)
+.dev.vars
+.wrangler/
+
 # local agent skills (installed via npx)
 .agents/

@@ -11,11 +11,10 @@ const COR_VOCE = "#ffd319";
 const TAMANHO_MAXIMO = 32 * 1024 * 1024;
 const TIPOS_ACEITOS = ["image/png", "image/jpeg", "image/webp", "image/gif"];
 
-const PROMPT_GTA =
-  "Transforme esta foto em um personagem jogável de GTA 6 em Dev City: " +
-  "visual cinematográfico de pôster de jogo, cores neon rosa e amarelo, " +
-  "iluminação de cidade à noite, rosto reconhecível, atitude de lenda, " +
-  "tom satírico e divertido, alta qualidade.";
+// Troque SEU_SUBDOMINIO pela URL que o Wrangler mostrar após `npm run deploy:worker`.
+const WORKER_URL = "https://devcity-gerador-lenda.SEU_SUBDOMINIO.workers.dev";
+// O modelo pede entradas MENORES que 512x512; 511 evita erro no limite exato.
+const LADO_MAXIMO_FOTO = 511;
 
 const botoesPersonagem = document.querySelectorAll("[data-personagem]");
 const btnVoce = document.querySelector("#btn-voce");
@@ -30,6 +29,7 @@ const btnGerar = document.querySelector("#btn-gerar");
 const btnCancelar = document.querySelector("#btn-cancelar");
 
 let urlPreview = null;
+let urlImagemGerada = null;
 
 function limparSelecao() {
   botoesPersonagem.forEach((botao) => {
@@ -54,25 +54,60 @@ function definirStatus(mensagem) {
   status.textContent = mensagem;
 }
 
-function mensagemAutenticacao(falha) {
-  const codigo = falha && (falha.error || falha.code);
+function mensagemErro(status) {
   const mensagens = {
-    popup_blocked: "O navegador bloqueou o login. Permita pop-ups para este site e tente outra vez.",
-    auth_window_closed: "Você fechou a janela de login. Tente outra vez quando quiser.",
-    unsupported_origin: "Abra a página pelo servidor local (npm start), não direto do disco.",
+    400: "A foto enviada não é válida. Tente outra imagem.",
+    405: "Não foi possível chamar o serviço de imagem. Recarregue a página.",
+    413: "A imagem é grande demais. Use uma foto menor.",
+    429: "Muitas lendas criadas agora. Espere um instante e tente outra vez.",
+    500: "O serviço de imagem falhou. Tente outra vez.",
+    502: "O serviço de imagem falhou. Tente outra vez.",
+    503: "O serviço está ocupado. Tente outra vez em instantes.",
   };
-  return mensagens[codigo] || "Não foi possível entrar na conta Puter. Tente outra vez.";
+  return mensagens[status] || "Não foi possível criar sua lenda. Tente outra vez.";
 }
 
-function mensagemGeracao(falha) {
-  const codigo = falha && (falha.errorCode || falha.code || falha.error);
-  const mensagens = {
-    insufficient_funds: "Seus créditos do Puter não cobrem a imagem. Recarregue a conta e tente outra vez.",
-    moderation_flagged: "A foto ou o texto foi barrado pelo filtro de conteúdo. Tente outra imagem.",
-    upstream_failed: "O serviço de imagem falhou do outro lado. Tente outra vez.",
-    access_denied: "O Puter não conseguiu ler essa imagem. Tente outra foto.",
-  };
-  return mensagens[codigo] || "Não foi possível criar sua lenda. Tente outra vez.";
+// O modelo FLUX.2 klein exige entradas menores que 512x512. Reduzimos no
+// navegador antes do envio para economizar cota e evitar erro no Worker.
+function redimensionarFoto(arquivo) {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(arquivo);
+    const imagem = new Image();
+
+    imagem.onload = () => {
+      URL.revokeObjectURL(url);
+
+      const escala = Math.min(
+        1,
+        LADO_MAXIMO_FOTO / Math.max(imagem.naturalWidth, imagem.naturalHeight),
+      );
+      const largura = Math.max(1, Math.round(imagem.naturalWidth * escala));
+      const altura = Math.max(1, Math.round(imagem.naturalHeight * escala));
+      const canvas = document.createElement("canvas");
+      canvas.width = largura;
+      canvas.height = altura;
+
+      const contexto = canvas.getContext("2d");
+      contexto.fillStyle = "#ffffff";
+      contexto.fillRect(0, 0, largura, altura);
+      contexto.drawImage(imagem, 0, 0, largura, altura);
+
+      canvas.toBlob((blob) => {
+        if (blob) {
+          resolve(blob);
+        } else {
+          reject(new Error("Não foi possível preparar a imagem."));
+        }
+      }, "image/jpeg", 0.9);
+    };
+
+    imagem.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error("Não foi possível ler essa imagem."));
+    };
+
+    imagem.src = url;
+  });
 }
 
 function definirOcupado(ocupado) {
@@ -152,7 +187,7 @@ dialogo.addEventListener("close", () => {
   }
 });
 
-// Fase 5: validação, login e geração image-to-image com o Puter.
+// Fase 5: validação, redimensionamento e geração com Cloudflare Workers AI.
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
   limparErro();
@@ -180,38 +215,55 @@ form.addEventListener("submit", async (event) => {
     return;
   }
 
-  if (!window.puter) {
-    mostrarErro("O Puter não carregou. Verifique sua conexão e recarregue a página.");
+  if (WORKER_URL.includes("SEU_SUBDOMINIO")) {
+    mostrarErro("Configure a URL do Worker em js/app.js antes de gerar sua lenda.");
     return;
   }
 
-  // Desabilita antes de qualquer await para evitar um segundo clique durante o popup.
+  // Desabilita antes de qualquer await para evitar um segundo clique.
   definirOcupado(true);
 
   try {
-    // signIn() precisa ser chamado no gesto do usuário, antes de qualquer await.
-    if (!puter.auth.isSignedIn()) {
-      await puter.auth.signIn();
-    }
+    const foto = await redimensionarFoto(arquivo);
+    const dados = new FormData();
+    dados.append("foto", foto, "selfie.jpg");
 
-    const imagem = await puter.ai.txt2img({
-      prompt: PROMPT_GTA,
-      input_image: arquivo,
-      input_image_mime_type: arquivo.type,
-      model: "gemini-3.1-flash-image",
-      test_mode: false, // trocar para false quando quiser gerar de verdade (gasta créditos)
+    const resposta = await fetch(WORKER_URL, {
+      method: "POST",
+      body: dados,
     });
 
-    escolherPersonagem("Você", imagem.src, COR_VOCE);
+    if (!resposta.ok) {
+      let detalhe = "";
+
+      try {
+        const corpo = await resposta.json();
+        detalhe = corpo && corpo.erro ? corpo.erro : "";
+      } catch (falha) {
+        // O corpo não é JSON: usa a mensagem padrão pelo status HTTP.
+      }
+
+      throw new Error(detalhe || mensagemErro(resposta.status));
+    }
+
+    const imagem = await resposta.blob();
+
+    if (!imagem.type.startsWith("image/")) {
+      throw new Error("O serviço não devolveu uma imagem. Tente outra vez.");
+    }
+
+    if (urlImagemGerada) {
+      URL.revokeObjectURL(urlImagemGerada);
+    }
+    urlImagemGerada = URL.createObjectURL(imagem);
+
+    escolherPersonagem("Você", urlImagemGerada, COR_VOCE);
     limparSelecao();
     btnVoce.classList.add("ativo");
     dialogo.close("sucesso");
     definirStatus("Sua lenda de Dev City está pronta!");
   } catch (falha) {
-    const mensagem = falha && falha.error === "popup_blocked"
-      ? mensagemAutenticacao(falha)
-      : mensagemGeracao(falha);
-    mostrarErro(mensagem);
+    mostrarErro(falha && falha.message ? falha.message : mensagemErro(0));
   } finally {
     definirOcupado(false);
   }

@@ -1,0 +1,7 @@
+name = "devcity-gerador-lenda"
+main = "index.js"
+compatibility_date = "2026-11-17"
+
+# Binding que libera env.AI.run() dentro do Worker.
+[ai]
+binding = "AI"
