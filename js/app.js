@@ -11,8 +11,8 @@ const COR_VOCE = "#ffd319";
 const TAMANHO_MAXIMO = 32 * 1024 * 1024;
 const TIPOS_ACEITOS = ["image/png", "image/jpeg", "image/webp", "image/gif"];
 
-// Troque SEU_SUBDOMINIO pela URL que o Wrangler mostrar após `npm run deploy:worker`.
-const WORKER_URL = "https://devcity-gerador-lenda.SEU_SUBDOMINIO.workers.dev";
+// URL publicada pelo Worker Cloudflare (ver worker/wrangler.toml).
+const WORKER_URL = "https://devcity-gerador-lenda.devcity-cirleno.workers.dev";
 // O modelo pede entradas MENORES que 512x512; 511 evita erro no limite exato.
 const LADO_MAXIMO_FOTO = 511;
 
@@ -58,6 +58,7 @@ function mensagemErro(status) {
   const mensagens = {
     400: "A foto enviada não é válida. Tente outra imagem.",
     405: "Não foi possível chamar o serviço de imagem. Recarregue a página.",
+    422: "Essa foto foi barrada pelo filtro de conteúdo. Tente outra imagem.",
     413: "A imagem é grande demais. Use uma foto menor.",
     429: "Muitas lendas criadas agora. Espere um instante e tente outra vez.",
     500: "O serviço de imagem falhou. Tente outra vez.",

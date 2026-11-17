@@ -126,6 +126,10 @@ export default {
         return erroJson("Muitas lendas criadas agora. Espere um instante e tente outra vez.", 429);
       }
 
+      if (/flagged|moderation|safety/i.test(detalhe)) {
+        return erroJson("Essa foto foi barrada pelo filtro de conteúdo. Tente outra imagem.", 422);
+      }
+
       return erroJson("O serviço de imagem falhou. Tente outra vez em instantes.", 502);
     }
   },
