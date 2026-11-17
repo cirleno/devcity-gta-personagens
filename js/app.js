@@ -11,6 +11,7 @@ const PERSONAGENS = {
 
 const FUNDO_VOCE = "img/Gta6carredbg.webp";
 const COR_VOCE = "#ffd319";
+const TEXTO_LEGENDA = "A Lenda";
 const TAMANHO_MAXIMO = 32 * 1024 * 1024;
 const TIPOS_ACEITOS = ["image/png", "image/jpeg", "image/webp", "image/gif"];
 
@@ -31,6 +32,7 @@ const erro = document.querySelector("#erro-voce");
 const status = document.querySelector("#status-voce");
 const btnGerar = document.querySelector("#btn-gerar");
 const btnCancelar = document.querySelector("#btn-cancelar");
+const imagemPersonagem = document.querySelector("#imagem-personagem");
 
 let urlPreview = null;
 let urlImagemGerada = null;
@@ -120,6 +122,54 @@ function redimensionarFoto(arquivo) {
 
     imagem.src = url;
   });
+}
+
+// A legenda é desenhada na imagem para aparecer também no arquivo baixado.
+// Modelos de imagem costumam errar texto, então não pedimos isso no prompt.
+async function adicionarLegenda(blob) {
+  const url = URL.createObjectURL(blob);
+
+  try {
+    const imagem = await new Promise((resolve, reject) => {
+      const elemento = new Image();
+      elemento.onload = () => resolve(elemento);
+      elemento.onerror = () => reject(new Error("Não foi possível ler a imagem gerada."));
+      elemento.src = url;
+    });
+
+    const canvas = document.createElement("canvas");
+    canvas.width = imagem.naturalWidth;
+    canvas.height = imagem.naturalHeight;
+
+    const contexto = canvas.getContext("2d");
+    contexto.drawImage(imagem, 0, 0);
+
+    const alturaFaixa = Math.round(canvas.height * 0.14);
+    const inicioFaixa = canvas.height - alturaFaixa;
+    contexto.fillStyle = "rgba(8, 5, 22, 0.82)";
+    contexto.fillRect(0, inicioFaixa, canvas.width, alturaFaixa);
+
+    if (document.fonts) {
+      await document.fonts.ready;
+    }
+    contexto.fillStyle = "#ffd319";
+    contexto.font = `700 ${Math.round(canvas.width * 0.11)}px Bangers, system-ui, sans-serif`;
+    contexto.textAlign = "center";
+    contexto.textBaseline = "middle";
+    contexto.fillText(TEXTO_LEGENDA, canvas.width / 2, inicioFaixa + alturaFaixa / 2, canvas.width * 0.9);
+
+    return await new Promise((resolve, reject) => {
+      canvas.toBlob((resultado) => {
+        if (resultado) {
+          resolve(resultado);
+        } else {
+          reject(new Error("Não foi possível aplicar a legenda."));
+        }
+      }, "image/jpeg", 0.92);
+    });
+  } finally {
+    URL.revokeObjectURL(url);
+  }
 }
 
 function definirOcupado(ocupado) {
@@ -284,12 +334,15 @@ form.addEventListener("submit", async (event) => {
       throw new Error("O serviço não devolveu uma imagem. Tente outra vez.");
     }
 
+    const imagemComLegenda = await adicionarLegenda(imagem);
+
     if (urlImagemGerada) {
       URL.revokeObjectURL(urlImagemGerada);
     }
-    urlImagemGerada = URL.createObjectURL(imagem);
+    urlImagemGerada = URL.createObjectURL(imagemComLegenda);
 
     selecionarPersonagem("Você", urlImagemGerada, COR_VOCE);
+    imagemPersonagem.alt = `Sua lenda de Dev City com a legenda ${TEXTO_LEGENDA}`;
     trocarFundo(FUNDO_VOCE);
     limparSelecao();
     btnDownload.hidden = false;
