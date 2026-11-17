@@ -21,6 +21,6 @@ A small static single-page site (Brazilian Portuguese, GTA/"Dev City" themed cha
 - `js/vendor/` and `img/` keep `.gitkeep` files so they stay tracked; preserve them so the CopyPlugin patterns have a source directory.
 
 ## Conventions
-- User-facing text, comments, and identifiers are in Brazilian Portuguese — keep new code consistent.
+- User-facing text, comments, and identifiers are in Brazilian Portuguese — keep new code consistent. The support copy is a single `<p id="descricao-personagens">` referenced by the menu's `aria-describedby`; `<strong>` marks the selfie option semantically but inherits the normal font weight. Preserve both when editing that sentence.
 - `.editorconfig`: UTF-8, LF, 2-space indent, final newline, trim trailing whitespace. `.gitattributes` enforces LF for text files (only `*.bat` is CRLF); images/icons are binary.
 - `css/style.css` starts with HTML5 Boilerplate / main.css boilerplate; project styles belong under the "Author's custom styles" section and below. Image URLs there are `../img/...` because the stylesheet lives in `css/` while images are copied to `dist/img/`.

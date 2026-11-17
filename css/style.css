@@ -164,6 +164,11 @@ h1 {
   max-width: 34rem;
 }
 
+/* `<strong>` dá ênfase semântica à opção da selfie, sem mudar a aparência. */
+.texto-apoio strong {
+  font-weight: inherit;
+}
+
 .nome {
   grid-area: nome;
   place-self: end center;

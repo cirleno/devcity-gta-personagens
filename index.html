@@ -29,14 +29,14 @@
     <div class="textos">
       <p class="etiqueta">Selecione o seu Personagem</p>
       <h1>Não é só um Jogo</h1>
-      <p class="texto-apoio">Escolha uma lenda de Dev City. Ou tire uma selfie e vire uma lenda!</p>
+      <p class="texto-apoio" id="descricao-personagens">Escolha uma lenda de Dev City. Ou <strong>tire uma selfie</strong> e vire uma lenda!</p>
     </div>
 
     <h2 class="nome" aria-live="polite">Lucia</h2>
 
     <img class="personagem" id="imagem-personagem" src="img/lucia.png" alt="Lucia" width="761" height="1150" fetchpriority="high">
 
-    <nav class="menu" aria-label="Selecionar personagem">
+    <nav class="menu" aria-label="Selecionar personagem" aria-describedby="descricao-personagens">
       <button class="ativo" type="button" data-personagem="lucia" aria-pressed="true">
         <img class="avatar" src="img/lucia.png" alt="" width="60" height="60">
         Lucia
