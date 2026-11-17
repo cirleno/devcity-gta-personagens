@@ -20,6 +20,7 @@ const LADO_MAXIMO_FOTO = 511;
 
 const botoesPersonagem = document.querySelectorAll("[data-personagem]");
 const btnVoce = document.querySelector("#btn-voce");
+const btnDownload = document.querySelector("#btn-download");
 const dialogo = document.querySelector("#dialogo-voce");
 const form = document.querySelector("#form-voce");
 const inputFoto = document.querySelector("#foto-voce");
@@ -125,6 +126,7 @@ botoesPersonagem.forEach((botao) => {
     const dados = PERSONAGENS[botao.dataset.personagem];
     selecionarPersonagem(dados.nome, dados.imagem, dados.cor);
     limparSelecao();
+    btnDownload.hidden = true;
     botao.classList.add("ativo");
     botao.setAttribute("aria-pressed", "true");
   });
@@ -133,6 +135,21 @@ botoesPersonagem.forEach((botao) => {
 // Fase 4: o diálogo nativo cuida de foco, Esc e devolução de foco ao botão "Você".
 btnVoce.addEventListener("click", () => dialogo.showModal());
 btnCancelar.addEventListener("click", () => dialogo.close());
+
+// Só aparece depois de uma geração bem-sucedida. O blob é local, então o
+// download não consome cota nem faz outra chamada ao Worker.
+btnDownload.addEventListener("click", () => {
+  if (!urlImagemGerada) {
+    return;
+  }
+
+  const link = document.createElement("a");
+  link.href = urlImagemGerada;
+  link.download = "lenda-devcity.jpg";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+});
 
 inputFoto.addEventListener("input", () => {
   // Só limpa mensagens enquanto a pessoa escolhe o arquivo; valida de verdade no submit.
@@ -262,6 +279,7 @@ form.addEventListener("submit", async (event) => {
 
     selecionarPersonagem("Você", urlImagemGerada, COR_VOCE);
     limparSelecao();
+    btnDownload.hidden = false;
     btnVoce.classList.add("ativo");
     dialogo.close("sucesso");
     definirStatus("Sua lenda de Dev City está pronta!");

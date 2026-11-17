@@ -248,6 +248,15 @@ button.ativo {
   background: #ffe266;
 }
 
+.download {
+  border-color: var(--verde);
+  color: var(--verde);
+}
+
+.download:hover {
+  background: rgba(119, 221, 119, 0.18);
+}
+
 dialog {
   /* showModal() já centraliza; deixar explícito evita herdar position de outro CSS. */
   inset: 0;
