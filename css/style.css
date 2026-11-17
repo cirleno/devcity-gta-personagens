@@ -1,0 +1,565 @@
+/*! HTML5 Boilerplate v9.0.0-RC1 | MIT License | https://html5boilerplate.com/ */
+
+/* main.css 3.0.0 | MIT License | https://github.com/h5bp/main.css#readme */
+/*
+ * What follows is the result of much research on cross-browser styling.
+ * Credit left inline and big thanks to Nicolas Gallagher, Jonathan Neal,
+ * Kroc Camen, and the H5BP dev community and team.
+ */
+
+/* ==========================================================================
+   Base styles: opinionated defaults
+   ========================================================================== */
+
+html {
+  color: #222;
+  font-size: 1em;
+  line-height: 1.4;
+}
+
+/*
+ * Remove text-shadow in selection highlight:
+ * https://twitter.com/miketaylr/status/12228805301
+ *
+ * Customize the background color to match your design.
+ */
+
+::-moz-selection {
+  background: #b3d4fc;
+  text-shadow: none;
+}
+
+::selection {
+  background: #b3d4fc;
+  text-shadow: none;
+}
+
+/*
+ * A better looking default horizontal rule
+ */
+
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #ccc;
+  margin: 1em 0;
+  padding: 0;
+}
+
+/*
+ * Remove the gap between audio, canvas, iframes,
+ * images, videos and the bottom of their containers:
+ * https://github.com/h5bp/html5-boilerplate/issues/440
+ */
+
+audio,
+canvas,
+iframe,
+img,
+svg,
+video {
+  vertical-align: middle;
+}
+
+/*
+ * Remove default fieldset styles.
+ */
+
+fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+/*
+ * Allow only vertical resizing of textareas.
+ */
+
+textarea {
+  resize: vertical;
+}
+
+/* ==========================================================================
+   Author's custom styles
+   ========================================================================== */
+
+:root {
+  --rosa: #ff3cac;
+  --amarelo: #ffd319;
+  --azul: #4cc9f0;
+  --verde: #77dd77;
+  --cor-personagem: var(--rosa);
+  --tinta: #ffffff;
+  --painel: #140f2b;
+}
+
+* {
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Bangers", system-ui, sans-serif;
+}
+
+html {
+  min-height: 100%;
+}
+
+body {
+  min-height: 100dvh;
+  background: url("../img/background2.jpg") center / cover fixed no-repeat;
+  color: var(--tinta);
+}
+
+.palco {
+  position: relative;
+  isolation: isolate;
+  min-height: 100dvh;
+  display: grid;
+  grid-template-areas:
+    "textos"
+    "personagem"
+    "menu";
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: clamp(0.75rem, 2vh, 1.5rem);
+  padding: clamp(1rem, 2.5vw, 2rem);
+}
+
+.palco::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    180deg,
+    rgba(8, 5, 22, 0.82),
+    rgba(8, 5, 22, 0.25) 45%,
+    rgba(8, 5, 22, 0.85)
+  );
+}
+
+.textos {
+  grid-area: textos;
+  max-width: 42rem;
+  text-shadow: 0 3px 12px rgba(0, 0, 0, 0.7);
+}
+
+.etiqueta {
+  color: var(--amarelo);
+  font-size: clamp(1rem, 0.8rem + 1vw, 1.5rem);
+  letter-spacing: 0.08em;
+}
+
+h1 {
+  font-size: clamp(2.75rem, 1rem + 7vw, 6.5rem);
+  line-height: 0.95;
+}
+
+.texto-apoio {
+  font-family: system-ui, sans-serif;
+  font-size: clamp(0.875rem, 0.8rem + 0.4vw, 1.05rem);
+  max-width: 34rem;
+}
+
+.nome {
+  grid-area: personagem;
+  place-self: start center;
+  z-index: 2;
+  color: var(--cor-personagem);
+  font-size: clamp(3rem, 1rem + 11vw, 9rem);
+  line-height: 0.9;
+  text-align: center;
+  text-shadow: 0 4px 0 rgba(0, 0, 0, 0.55), 0 0 28px currentColor;
+  pointer-events: none;
+}
+
+.personagem {
+  grid-area: personagem;
+  place-self: end center;
+  z-index: 1;
+  width: auto;
+  height: clamp(14rem, 52vh, 38rem);
+  max-width: min(90vw, 34rem);
+  object-fit: contain;
+  filter: drop-shadow(0 18px 22px rgba(0, 0, 0, 0.65));
+  pointer-events: none;
+}
+
+.menu {
+  grid-area: menu;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(0.5rem, 1.5vw, 1rem);
+}
+
+button {
+  min-height: 48px;
+  padding: 0.6rem 1.1rem;
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  border-radius: 999px;
+  background: rgba(20, 15, 43, 0.78);
+  color: var(--tinta);
+  font: inherit;
+  font-size: clamp(1rem, 0.9rem + 0.4vw, 1.25rem);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: transform 120ms ease, background-color 120ms ease;
+}
+
+button:hover {
+  background: rgba(255, 255, 255, 0.16);
+  transform: translateY(-2px);
+}
+
+button:focus-visible,
+input:not([type="file"]):focus-visible {
+  outline: 3px solid var(--amarelo);
+  outline-offset: 3px;
+}
+
+button.ativo {
+  border-color: var(--amarelo);
+  box-shadow: 0 0 0 3px rgba(255, 211, 25, 0.35);
+}
+
+.avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: top;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+}
+
+.voce,
+.botao-primario {
+  background: var(--amarelo);
+  border-color: var(--amarelo);
+  color: #100b24;
+  font-weight: 700;
+}
+
+.voce:hover,
+.botao-primario:hover {
+  background: #ffe266;
+}
+
+dialog {
+  /* showModal() já centraliza; deixar explícito evita herdar position de outro CSS. */
+  inset: 0;
+  margin: auto;
+  width: min(32rem, calc(100% - 2rem));
+  max-height: min(90dvh, 44rem);
+  overflow: auto;
+  padding: clamp(1rem, 3vw, 2rem);
+  border: 2px solid var(--amarelo);
+  border-radius: 1rem;
+  background: var(--painel);
+  color: var(--tinta);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.7);
+}
+
+dialog[open] {
+  display: grid;
+  gap: 1rem;
+}
+
+dialog:modal {
+  overscroll-behavior: contain;
+}
+
+dialog::backdrop {
+  background: rgba(6, 4, 16, 0.78);
+  overflow: hidden;
+  overscroll-behavior: contain;
+}
+
+dialog h2 {
+  color: var(--amarelo);
+  font-size: clamp(1.5rem, 1rem + 2vw, 2.25rem);
+}
+
+#form-voce {
+  display: grid;
+  gap: 1rem;
+}
+
+.campo {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.campo label,
+.dica,
+.erro {
+  font-family: system-ui, sans-serif;
+  font-size: 0.95rem;
+}
+
+.campo label {
+  color: var(--amarelo);
+  font-weight: 700;
+}
+
+/* Mantém o input nativo, mas dá destaque ao botão "Escolher arquivo". */
+#foto-voce {
+  width: 100%;
+  min-height: 56px;
+  padding: 0.5rem;
+  border: 2px dashed rgba(255, 211, 25, 0.75);
+  border-radius: 0.75rem;
+  background: rgba(255, 211, 25, 0.08);
+  color: var(--tinta);
+  font: inherit;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+#foto-voce::file-selector-button {
+  min-height: 48px;
+  margin-inline-end: 0.75rem;
+  padding: 0.6rem 1.1rem;
+  border: 2px solid var(--amarelo);
+  border-radius: 999px;
+  background: var(--amarelo);
+  color: #100b24;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 120ms ease, background-color 120ms ease;
+}
+
+#foto-voce::file-selector-button:hover {
+  background: #ffe266;
+  transform: translateY(-2px);
+}
+
+#foto-voce:focus-visible::file-selector-button {
+  outline: 3px solid var(--tinta);
+  outline-offset: 3px;
+}
+
+.dica {
+  color: #d9d4ee;
+}
+
+.erro {
+  color: #ff9db1;
+}
+
+.preview {
+  width: 100%;
+  max-height: 12rem;
+  object-fit: contain;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+#progresso-voce {
+  width: 100%;
+  accent-color: var(--amarelo);
+}
+
+.acoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.acoes button {
+  flex: 1 1 10rem;
+}
+
+button:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+@media (max-width: 30rem) {
+  .avatar {
+    width: 36px;
+    height: 36px;
+  }
+
+  button {
+    padding-inline: 0.8rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/* ==========================================================================
+   Helper classes
+   ========================================================================== */
+
+/*
+ * Hide visually and from screen readers
+ */
+
+.hidden,
+[hidden] {
+  display: none !important;
+}
+
+/*
+ * Hide only visually, but have it available for screen readers:
+ * https://snook.ca/archives/html_and_css/hiding-content-for-accessibility
+ *
+ * 1. For long content, line feeds are not interpreted as spaces and small width
+ *    causes content to wrap 1 word per line:
+ *    https://medium.com/@jessebeach/beware-smushed-off-screen-accessible-text-5952a4c2cbfe
+ */
+
+.visually-hidden {
+  border: 0;
+  clip: rect(0, 0, 0, 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+  /* 1 */
+}
+
+/*
+ * Extends the .visually-hidden class to allow the element
+ * to be focusable when navigated to via the keyboard:
+ * https://www.drupal.org/node/897638
+ */
+
+.visually-hidden.focusable:active,
+.visually-hidden.focusable:focus {
+  clip: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  position: static;
+  white-space: inherit;
+  width: auto;
+}
+
+/*
+ * Hide visually and from screen readers, but maintain layout
+ */
+
+.invisible {
+  visibility: hidden;
+}
+
+/*
+ * Clearfix: contain floats
+ *
+ * The use of `table` rather than `block` is only necessary if using
+ * `::before` to contain the top-margins of child elements.
+ */
+
+.clearfix::before,
+.clearfix::after {
+  content: "";
+  display: table;
+}
+
+.clearfix::after {
+  clear: both;
+}
+
+/* ==========================================================================
+   EXAMPLE Media Queries for Responsive Design.
+   These examples override the primary ('mobile first') styles.
+   Modify as content requires.
+   ========================================================================== */
+
+@media only screen and (min-width: 35em) {
+  /* Style adjustments for viewports that meet the condition */
+}
+
+@media print,
+  (-webkit-min-device-pixel-ratio: 1.25),
+  (min-resolution: 1.25dppx),
+  (min-resolution: 120dpi) {
+  /* Style adjustments for high resolution devices */
+}
+
+/* ==========================================================================
+   Print styles.
+   Inlined to avoid the additional HTTP request:
+   https://www.phpied.com/delay-loading-your-print-css/
+   ========================================================================== */
+
+@media print {
+  *,
+  *::before,
+  *::after {
+    background: #fff !important;
+    color: #000 !important;
+    /* Black prints faster */
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  a,
+  a:visited {
+    text-decoration: underline;
+  }
+
+  a[href]::after {
+    content: " (" attr(href) ")";
+  }
+
+  abbr[title]::after {
+    content: " (" attr(title) ")";
+  }
+
+  /*
+   * Don't show links that are fragment identifiers,
+   * or use the `javascript:` pseudo protocol
+   */
+  a[href^="#"]::after,
+  a[href^="javascript:"]::after {
+    content: "";
+  }
+
+  pre {
+    white-space: pre-wrap !important;
+  }
+
+  pre,
+  blockquote {
+    border: 1px solid #999;
+    page-break-inside: avoid;
+  }
+
+  tr,
+  img {
+    page-break-inside: avoid;
+  }
+
+  p,
+  h2,
+  h3 {
+    orphans: 3;
+    widows: 3;
+  }
+
+  h2,
+  h3 {
+    page-break-after: avoid;
+  }
+}
+
+
+

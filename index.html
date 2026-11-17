@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dev City — Escolha sua lenda | Não é só um Jogo</title>
+  <meta name="description" content="Escolha uma lenda de Dev City ou tire uma selfie e vire uma lenda do GTA 6.">
+  <meta property="og:title" content="Dev City — Escolha sua lenda">
+  <meta property="og:type" content="website">
+  <meta property="og:description" content="Escolha uma lenda de Dev City ou tire uma selfie e vire uma lenda do GTA 6.">
+  <meta property="og:image" content="img/lucia.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon.png">
+
+  <link rel="manifest" href="site.webmanifest">
+  <meta name="theme-color" content="#140f2b">
+</head>
+
+<body>
+  <main class="palco">
+    <div class="textos">
+      <p class="etiqueta">Selecione o seu Personagem</p>
+      <h1>Não é só um Jogo</h1>
+      <p class="texto-apoio">Escolha uma lenda de Dev City. Ou tire uma selfie e vire uma lenda!</p>
+    </div>
+
+    <h2 class="nome" aria-live="polite">Lucia</h2>
+
+    <img class="personagem" id="imagem-personagem" src="img/lucia.png" alt="Lucia" width="761" height="1150" fetchpriority="high">
+
+    <nav class="menu" aria-label="Selecionar personagem">
+      <button class="ativo" type="button" data-personagem="lucia" aria-pressed="true">
+        <img class="avatar" src="img/lucia.png" alt="" width="60" height="60">
+        Lucia
+      </button>
+      <button type="button" data-personagem="jason" aria-pressed="false">
+        <img class="avatar" src="img/jason.png" alt="" width="60" height="60">
+        Jason
+      </button>
+      <button type="button" data-personagem="cj" aria-pressed="false">
+        <img class="avatar" src="img/cj.png" alt="" width="60" height="60">
+        CJ
+      </button>
+      <button class="voce" id="btn-voce" type="button" aria-haspopup="dialog" aria-pressed="false">Você</button>
+    </nav>
+  </main>
+
+  <dialog id="dialogo-voce" aria-labelledby="titulo-dialogo">
+    <h2 id="titulo-dialogo">Vire uma lenda de Dev City</h2>
+
+    <form id="form-voce">
+      <div class="campo">
+        <label for="foto-voce">Sua foto (PNG, JPG, WebP ou GIF, até 32 MB)</label>
+        <input id="foto-voce" name="foto" type="file" accept="image/png,image/jpeg,image/webp,image/gif" aria-describedby="dica-foto erro-voce" autofocus required>
+        <p class="dica" id="dica-foto">Use um retrato bem iluminado: a IA mantém seu rosto e aplica o estilo do jogo.</p>
+      </div>
+
+      <img class="preview" id="preview-voce" alt="Prévia da foto enviada" width="200" height="200" hidden>
+
+      <progress id="progresso-voce" aria-label="Criando sua lenda" hidden></progress>
+      <p class="erro" id="erro-voce" role="alert" hidden></p>
+
+      <div class="acoes">
+        <button class="botao-primario" id="btn-gerar" type="submit">Gerar lenda</button>
+        <button id="btn-cancelar" type="button">Cancelar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <p class="visually-hidden" id="status-voce" role="status" aria-live="polite"></p>
+
+  <script src="https://js.puter.com/v2/"></script>
+  <script src="js/app.js"></script>
+
+</body>
+
+</html>
