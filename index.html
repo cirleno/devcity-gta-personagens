@@ -29,7 +29,7 @@
     <div class="textos">
       <p class="etiqueta">Selecione o seu Personagem</p>
       <h1>Não é só um Jogo</h1>
-      <p class="texto-apoio" id="descricao-personagens">Escolha uma lenda de Dev City. Ou <strong>tire uma selfie</strong> e vire uma lenda!</p>
+      <p class="texto-apoio" id="descricao-personagens"><strong>Escolha uma lenda de Dev City. Ou tire uma selfie e vire uma lenda!</strong> </p>
     </div>
 
     <h2 class="nome" aria-live="polite">Lucia</h2>
@@ -60,6 +60,8 @@
       </button>
       <button class="download" id="btn-download" type="button" hidden>Baixar lenda</button>
     </nav>
+
+    <img class="logo-marcal" src="img/x-marcal-logo.png" alt="X-Marçal" width="256" height="164">
   </main>
 
   <dialog id="dialogo-voce" aria-labelledby="titulo-dialogo">
@@ -69,7 +71,7 @@
       <div class="campo">
         <label for="foto-voce">Sua foto (PNG, JPG, WebP ou GIF, até 32 MB)</label>
         <input id="foto-voce" name="foto" type="file" accept="image/png,image/jpeg,image/webp,image/gif" aria-describedby="dica-foto erro-voce" autofocus required>
-        <p class="dica" id="dica-foto">Use um retrato bem iluminado: a IA mantém seu rosto e aplica o estilo do jogo.</p>
+        <p class="dica" id="dica-foto">Use um retrato bem iluminado: a IA mantém seu rosto e aplica o estilo GTA.</p>
       </div>
 
       <img class="preview" id="preview-voce" alt="Prévia da foto enviada" width="200" height="200" hidden>
@@ -79,7 +81,7 @@
 
       <div class="acoes">
         <button class="botao-primario" id="btn-gerar" type="submit">Gerar lenda</button>
-        <button id="btn-cancelar" type="button">Cancelar</button>
+        <button id="btn-cancelar" type="button">Cancelar!</button>
       </div>
     </form>
   </dialog>
