@@ -4,11 +4,12 @@ const selecionarPersonagem =
   typeof require === "function" ? require("./scripts.js") : window.escolherPersonagem;
 
 const PERSONAGENS = {
-  lucia: { nome: "Lucia", imagem: "img/lucia.png", cor: "#ff3cac" },
-  jason: { nome: "Jason", imagem: "img/jason.png", cor: "#4cc9f0" },
-  cj: { nome: "CJ", imagem: "img/cj.png", cor: "#77dd77" },
+  lucia: { nome: "Lucia", imagem: "img/lucia.webp", cor: "#ff3cac", fundo: "img/background.webp" },
+  jason: { nome: "Jason", imagem: "img/jason.webp", cor: "#4cc9f0", fundo: "img/background1.webp" },
+  cj: { nome: "CJ", imagem: "img/cj.webp", cor: "#77dd77", fundo: "img/background2.webp" },
 };
 
+const FUNDO_VOCE = "img/Gta6carredbg.webp";
 const COR_VOCE = "#ffd319";
 const TAMANHO_MAXIMO = 32 * 1024 * 1024;
 const TIPOS_ACEITOS = ["image/png", "image/jpeg", "image/webp", "image/gif"];
@@ -33,6 +34,13 @@ const btnCancelar = document.querySelector("#btn-cancelar");
 
 let urlPreview = null;
 let urlImagemGerada = null;
+
+// O fundo continua sendo regra do CSS; aqui só atualizamos a variável dele.
+// A URL vira absoluta porque o url() da variável resolve relativo ao CSS.
+function trocarFundo(caminho) {
+  const url = new URL(caminho, document.baseURI).href;
+  document.body.style.setProperty("--fundo", `url("${url}")`);
+}
 
 function limparSelecao() {
   botoesPersonagem.forEach((botao) => {
@@ -125,6 +133,7 @@ botoesPersonagem.forEach((botao) => {
   botao.addEventListener("click", () => {
     const dados = PERSONAGENS[botao.dataset.personagem];
     selecionarPersonagem(dados.nome, dados.imagem, dados.cor);
+    trocarFundo(dados.fundo);
     limparSelecao();
     btnDownload.hidden = true;
     botao.classList.add("ativo");
@@ -133,7 +142,10 @@ botoesPersonagem.forEach((botao) => {
 });
 
 // Fase 4: o diálogo nativo cuida de foco, Esc e devolução de foco ao botão "Você".
-btnVoce.addEventListener("click", () => dialogo.showModal());
+btnVoce.addEventListener("click", () => {
+  trocarFundo(FUNDO_VOCE);
+  dialogo.showModal();
+});
 btnCancelar.addEventListener("click", () => dialogo.close());
 
 // Só aparece depois de uma geração bem-sucedida. O blob é local, então o
@@ -278,6 +290,7 @@ form.addEventListener("submit", async (event) => {
     urlImagemGerada = URL.createObjectURL(imagem);
 
     selecionarPersonagem("Você", urlImagemGerada, COR_VOCE);
+    trocarFundo(FUNDO_VOCE);
     limparSelecao();
     btnDownload.hidden = false;
     btnVoce.classList.add("ativo");

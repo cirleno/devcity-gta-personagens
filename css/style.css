@@ -105,8 +105,10 @@ html {
 }
 
 body {
+  /* O JS troca só o valor de --fundo quando um botão é clicado. */
+  --fundo: url("../img/background.webp");
   min-height: 100dvh;
-  background: url("../img/background2.jpg") center / cover fixed no-repeat;
+  background: var(--fundo) center / cover fixed no-repeat;
   color: var(--tinta);
 }
 
