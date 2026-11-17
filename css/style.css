@@ -235,7 +235,6 @@ button.ativo {
   border: 2px solid rgba(255, 255, 255, 0.8);
 }
 
-.voce,
 .botao-primario {
   background: var(--amarelo);
   border-color: var(--amarelo);
@@ -243,7 +242,6 @@ button.ativo {
   font-weight: 700;
 }
 
-.voce:hover,
 .botao-primario:hover {
   background: #ffe266;
 }
