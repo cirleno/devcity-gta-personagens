@@ -144,19 +144,27 @@ async function adicionarLegenda(blob) {
     const contexto = canvas.getContext("2d");
     contexto.drawImage(imagem, 0, 0);
 
-    const alturaFaixa = Math.round(canvas.height * 0.14);
-    const inicioFaixa = canvas.height - alturaFaixa;
-    contexto.fillStyle = "rgba(8, 5, 22, 0.82)";
-    contexto.fillRect(0, inicioFaixa, canvas.width, alturaFaixa);
-
     if (document.fonts) {
       await document.fonts.ready;
     }
-    contexto.fillStyle = "#ffd319";
-    contexto.font = `700 ${Math.round(canvas.width * 0.11)}px Bangers, system-ui, sans-serif`;
+
+    const tamanhoFonte = Math.round(canvas.width * 0.12);
+    const meioX = canvas.width / 2;
+    const meioY = Math.round(canvas.height * 0.82);
+
+    contexto.font = `700 ${tamanhoFonte}px Bangers, system-ui, sans-serif`;
     contexto.textAlign = "center";
     contexto.textBaseline = "middle";
-    contexto.fillText(TEXTO_LEGENDA, canvas.width / 2, inicioFaixa + alturaFaixa / 2, canvas.width * 0.9);
+    contexto.lineJoin = "round";
+    contexto.lineWidth = Math.max(6, Math.round(tamanhoFonte * 0.16));
+    // Contorno escuro e sombra mantêm a leitura sobre qualquer arte de fundo.
+    contexto.strokeStyle = "rgba(8, 5, 22, 0.95)";
+    contexto.shadowColor = "rgba(0, 0, 0, 0.85)";
+    contexto.shadowBlur = tamanhoFonte * 0.25;
+    contexto.shadowOffsetY = tamanhoFonte * 0.08;
+    contexto.strokeText(TEXTO_LEGENDA, meioX, meioY, canvas.width * 0.9);
+    contexto.fillStyle = "#ffd319";
+    contexto.fillText(TEXTO_LEGENDA, meioX, meioY, canvas.width * 0.9);
 
     return await new Promise((resolve, reject) => {
       canvas.toBlob((resultado) => {
