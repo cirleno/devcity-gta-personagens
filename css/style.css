@@ -141,6 +141,8 @@ body {
 
 .textos {
   grid-area: textos;
+  display: grid;
+  gap: clamp(0.75rem, 2vh, 1.5rem);
   max-width: 42rem;
   text-shadow: 0 3px 12px rgba(0, 0, 0, 0.7);
 }
@@ -179,7 +181,7 @@ h1 {
   place-self: center center;
   z-index: 1;
   width: auto;
-  height: clamp(12rem, 45vh, 32rem);
+  height: clamp(12rem, 42vh, 30rem);
   max-width: min(90vw, 34rem);
   object-fit: contain;
   filter: drop-shadow(0 18px 22px rgba(0, 0, 0, 0.65));
