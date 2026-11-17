@@ -60,4 +60,12 @@ function escolherPersonagem(nomePersonagem, imagemPersonagem, cor) {
     // src = colocar algo dentro do src da imagem
 }
 
-module.exports = escolherPersonagem
+// No Live Server (sem webpack), o navegador não tem `module`: expomos a função
+// no window para o app.js conseguir usá-la mesmo sem o bundle.
+if (typeof window !== "undefined") {
+  window.escolherPersonagem = escolherPersonagem;
+}
+
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = escolherPersonagem;
+}

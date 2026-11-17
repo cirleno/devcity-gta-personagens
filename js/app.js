@@ -1,5 +1,7 @@
 // Entry real do bundle. A lógica didática (e a função escolherPersonagem) mora em scripts.js.
-const escolherPersonagem = require("./scripts.js");
+// Com webpack, `require` existe; no Live Server, scripts.js já deixou a função no window.
+const selecionarPersonagem =
+  typeof require === "function" ? require("./scripts.js") : window.escolherPersonagem;
 
 const PERSONAGENS = {
   lucia: { nome: "Lucia", imagem: "img/lucia.png", cor: "#ff3cac" },
@@ -121,7 +123,7 @@ function definirOcupado(ocupado) {
 botoesPersonagem.forEach((botao) => {
   botao.addEventListener("click", () => {
     const dados = PERSONAGENS[botao.dataset.personagem];
-    escolherPersonagem(dados.nome, dados.imagem, dados.cor);
+    selecionarPersonagem(dados.nome, dados.imagem, dados.cor);
     limparSelecao();
     botao.classList.add("ativo");
     botao.setAttribute("aria-pressed", "true");
@@ -258,7 +260,7 @@ form.addEventListener("submit", async (event) => {
     }
     urlImagemGerada = URL.createObjectURL(imagem);
 
-    escolherPersonagem("Você", urlImagemGerada, COR_VOCE);
+    selecionarPersonagem("Você", urlImagemGerada, COR_VOCE);
     limparSelecao();
     btnVoce.classList.add("ativo");
     dialogo.close("sucesso");
